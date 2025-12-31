@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID MOVIE - Free Streaming Movie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; }
+        
+        /* Header Styling */
+        .header-section { padding: 60px 0 40px; text-align: center; }
+        .main-logo { color: #e50914; font-weight: 800; font-size: 3.5rem; letter-spacing: 4px; margin-bottom: 0; text-transform: uppercase; }
+        .sub-logo { color: #aaa; font-size: 1.1rem; letter-spacing: 2px; font-weight: 400; }
+
+        /* Video Player Styling */
+        .video-container { background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.9); border: 1px solid #222; }
+        
+        /* Movie Detail Styling */
+        .film-info-box { background: #111; border-top: 4px solid #e50914; border-radius: 0 0 12px 12px; padding: 25px; }
+        .meta-info { font-size: 0.9rem; color: #e50914; margin-bottom: 15px; font-weight: 600; }
+        .meta-info span { color: #ccc; margin-right: 15px; background: #222; padding: 4px 10px; border-radius: 4px; }
+        .cast-text { font-size: 0.85rem; color: #999; line-height: 1.6; }
+        .label-red { color: #e50914; font-weight: 600; margin-right: 5px; }
+
+        /* Card Grid Styling */
+        .movie-card { background: #111; border: none; border-radius: 10px; overflow: hidden; transition: 0.3s; cursor: pointer; height: 100%; }
+        .movie-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4); }
+        .thumb-wrapper { position: relative; aspect-ratio: 2/3; background: #1a1a1a; }
+        .thumb-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .badge-hd { position: absolute; top: 10px; left: 10px; background: #e50914; font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        
+        footer { border-top: 1px solid #222; color: #444; font-size: 0.8rem; padding: 40px 0; }
+    </style>
+</head>
+<body>
+
+    <header class="header-section">
+        <div class="container">
+            <h1 class="main-logo">ID MOVIE</h1>
+            <p class="sub-logo">Free Streaming Movie</p>
+        </div>
+    </header>
+
+    <div class="container mb-5">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10">
+                <h2 id="main-title" class="mb-3 fw-bold text-center text-md-start">Memuat Film...</h2>
+                <div class="video-container">
+                    <div class="ratio ratio-16x9">
+                        <video id="video-player" controls="controls" poster="">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"/>
+                        </video>
+                    </div>
+                </div>
+                
+                <div class="film-info-box shadow">
+                    <div class="meta-info" id="main-meta">
+                        </div>
+                    <h5 class="text-white fw-bold mb-2">Sinopsis</h5>
+                    <p id="main-plot" class="text-secondary mb-4">Sedang menyinkronkan data dengan server TMDB...</p>
+                    <hr class="opacity-10">
+                    <div id="main-cast" class="cast-text">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mb-4 border-start border-danger border-4 ps-3 fw-bold">REKOMENDASI TERBARU</h4>
+        <div id="movie-grid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+            </div>
+
+        <div class="text-center mt-5">
+            <button class="btn btn-outline-danger rounded-pill px-5 py-2 fw-bold">JELAJAHI LEBIH BANYAK</button>
+        </div>
+    </div>
+
+    <footer class="bg-black text-center">
+        <div class="container">
+            <h4 class="text-danger fw-bold m-0">ID MOVIE</h4>
+            <p class="m-0 mt-2">&copy; 2026 Copyright ID MOVIE - All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+    const API_KEY = '0ac7d6475232e17859d8e46b5dc9a435';
+    const IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
+
+    const daftarID = [
+        1378756, 1287571, 1385536, 1296742, 1367947, 1501124, 
+        1407862, 1504156, 1414703, 1508069, 1393334, 1403612, 
+        1420270, 1506657, 1263112, 1181068, 1420031, 1386004, 
+        1286264, 1308042
+    ];
+
+    // Fungsi untuk memperbarui detail film di player utama
+    async function updatePlayer(movieID) {
+        try {
+            // Ambil detail film & cast (credits) secara bersamaan
+            const [movieRes, creditRes] = await Promise.all([
+                fetch(`https://api.themoviedb.org/3/movie/${movieID}?api_key=${API_KEY}&language=id-ID`),
+                fetch(`https://api.themoviedb.org/3/movie/${movieID}/credits?api_key=${API_KEY}`)
+            ]);
+            
+            const movie = await movieRes.json();
+            const credits = await creditRes.json();
+
+            // Update Judul & Poster
+            document.getElementById('main-title').innerText = movie.title;
+            const poster = movie.poster_path ? IMAGE_BASE + movie.poster_path : '';
+            document.getElementById('video-player').poster = poster;
+
+            // Update Meta Info (Genre, Durasi, Rating)
+            const genres = movie.genres.map(g => g.name).join(', ');
+            const duration = movie.runtime ? `${movie.runtime} Menit` : 'N/A';
+            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '0';
+            
+            document.getElementById('main-meta').innerHTML = `
+                <span>⭐ ${rating}</span> 
+                <span>⏱️ ${duration}</span> 
+                <span>📂 ${genres}</span>
+            `;
+
+            // Update Sinopsis
+            document.getElementById('main-plot').innerText = movie.overview || "Sinopsis tidak tersedia.";
+
+            // Update Cast (Ambil 5 pemain teratas)
+            const topCast = credits.cast.slice(0, 5).map(c => c.name).join(', ');
+            document.getElementById('main-cast').innerHTML = `<span class="label-red">Pemain:</span> ${topCast || 'N/A'}`;
+
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } catch (error) {
+            console.error("Gagal memperbarui player:", error);
+        }
+    }
+
+    async function loadMoviesByID() {
+        const grid = document.getElementById('movie-grid');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < daftarID.length; i++) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/movie/${daftarID[i]}?api_key=${API_KEY}&language=id-ID`);
+                const movie = await res.json();
+
+                if (movie.id) {
+                    const title = movie.title;
+                    const poster = movie.poster_path ? IMAGE_BASE + movie.poster_path : 'https://via.placeholder.com/300x450/222/fff?text=' + encodeURIComponent(title);
+                    const year = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
+
+                    // Load film pertama sebagai default
+                    if (i === 0) updatePlayer(movie.id);
+
+                    grid.innerHTML += `
+                        <div class="col" onclick="updatePlayer(${movie.id})">
+                            <div class="movie-card">
+                                <div class="thumb-wrapper">
+                                    <img src="${poster}" alt="${title}">
+                                    <span class="badge-hd">HD</span>
+                                </div>
+                                <div class="p-3">
+                                    <h6 class="text-truncate mb-0 text-white">${title}</h6>
+                                    <small class="text-secondary">${year}</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Gagal memuat ID: " + daftarID[i]);
+            }
+        }
+    }
+
+    loadMoviesByID();
+    </script>
+</body>
+</html>
