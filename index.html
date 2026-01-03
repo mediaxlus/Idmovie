@@ -916,7 +916,15 @@ function ovenClick() {
     window.location.href = "w.html";
 }
 
-
+function smartClick(kategori = '') {
+    window.open(DIRECT_LINK, '_blank');
+    
+    if (kategori) {
+        window.location.href = `w.html?filter=${kategori}`;
+    } else {
+        window.location.href = "w.html";
+    }
+}
 
 /* ======================================================
    5. TMDB API & INISIALISASI
