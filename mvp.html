@@ -1553,7 +1553,8 @@ function showFakeNotify() {
  * 10. INITIALIZATION
  */
 window.onload = () => {
-    const mId = new URLSearchParams(location.search).get('id') || 1378756;
+    const urlParams = new URLSearchParams(window.location.search);
+    const mId = urlParams.get('id') || urlParams.get('m') || 1378756;
     updatePlayer(mId);
     loadRek([1378756,1287571,1385536,1296742,1367947,
   1501124,1407862,1504156,1414703,1508069,
