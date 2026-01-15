@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ID MOVIE – Premium Streaming</title>
+
+<!-- BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+--primary:#e50914;
+--bg:#0a0a0a;
+--card:#141414;
+--text-dim:#b3b3b3;
+--glass:rgba(20,20,20,.7);
+}
+
+
+.header i {
+    color: white;
+    font-size: 1.2rem; /* Ukuran icon sedikit lebih besar */
+    transition: transform 0.2s ease-in-out;
+}
+
+.header a:hover i {
+    color: var(--primary); /* Berubah merah sesuai tema ID MOVIE */
+    transform: scale(1.2);  /* Efek sedikit membesar saat di-hover */
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+background:var(--bg);
+color:#fff;
+font-family:'Inter',sans-serif;
+overflow-x:hidden;
+padding-bottom:80px;
+}
+
+a{text-decoration:none}
+
+/* HEADER */
+.header{
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-size:2rem;
+font-weight:800;
+color:var(--primary);
+}
+
+.logo span{color:#fff}
+
+/* PLAYER */
+.player-outer{
+background:#000;
+box-shadow:0 30px 60px rgba(0,0,0,.7);
+}
+
+#player-wrapper{
+position:relative;
+width:100%;
+aspect-ratio:16/9;
+background:#000 center/cover no-repeat;
+overflow:hidden;
+cursor:pointer;
+}
+
+#player-wrapper::before{
+content:"";
+position:absolute;inset:0;
+background:inherit;
+filter:blur(30px) brightness(.6);
+z-index:1;
+}
+
+#video-player{
+position:relative;
+z-index:2;
+width:100%;
+height:100%;
+object-fit:contain;
+pointer-events:none;
+}
+
+/* CONTROLS */
+.middle-controls{
+position:absolute;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+z-index:20;
+}
+
+.btn-play{
+width:64px;height:64px;
+border-radius:50%;
+border:none;
+background:rgba(229,9,20,.85);
+color:#fff;
+font-size:2.8rem;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 0 40px rgba(0,0,0,.6);
+transition:.3s;
+}
+
+.btn-play:hover{transform:scale(1.1)}
+
+.bottom-controls{
+position:absolute;
+bottom:0;left:0;right:0;
+z-index:20;
+padding:25px 20px 15px;
+background:linear-gradient(transparent,rgba(0,0,0,.9));
+}
+
+.progress-area{
+height:6px;
+background:rgba(255,255,255,.25);
+border-radius:10px;
+overflow:hidden;
+margin-bottom:10px;
+}
+
+.progress-bar{
+height:100%;
+width:0;
+background:var(--primary);
+}
+
+.control-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:.85rem;
+}
+
+.btn-icon{
+background:none;
+border:none;
+color:#fff;
+font-size:1.2rem;
+}
+
+/* HIDE */
+.hide-controls{
+cursor:none;
+}
+
+.hide-controls .bottom-controls,
+.hide-controls .middle-controls{
+opacity:0;
+visibility:hidden;
+pointer-events:none;
+transition:.4s;
+}
+
+/* INFO FILM */
+
+
+    .film-info-box {
+        padding: 30px 0;
+    }
+
+    .meta-info span {
+        background: #222;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        margin-right: 8px;
+        font-weight: 600;
+    }
+
+    .genre-badge {
+        color: var(--primary-color);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .btn-server {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        color: #ccc !important; /* Tambahkan !important agar tidak biru link */
+        padding: 12px;
+        border-radius: 8px;
+        transition: 0.3s;
+        text-decoration: none;
+        display: block;
+        font-weight: 600;
+    }
+
+    .btn-server:hover {
+        background: #333;
+        color: #fff;
+        border-color: var(--primary);
+    }
+
+    .btn-server.active {
+        border-color: var(--primary);
+        color: var(--primary) !important;
+    }
+
+    .btn-icon {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 0.85rem;
+        cursor: pointer;
+    }
+
+    .btn-download {
+        background: linear-gradient(45deg, #111, #222);
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 12px;
+        font-weight: 600;
+        color: #fff;
+        text-decoration: none;
+        display: block;
+    }
+
+/* Container Spinner */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Latar gelap transparan */
+    display: none; /* Sembunyi secara default */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    backdrop-filter: blur(8px); /* Efek blur biar mewah */
+}
+
+/* Animasi Spinner */
+.real-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid #e50914; /* Warna spinner */
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+    color: white;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* RECOMMENDATION */
+.recommend-section{
+  padding:16px;
+}
+
+.rec-title{
+  font-weight:600;
+  margin-bottom:12px;
+}
+
+/* GRID RESPONSIVE */
+.rec-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+/* DESKTOP */
+@media(min-width:768px){
+  .rec-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+
+/* CARD */
+.rec-card{
+  position:relative;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  background:#111;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.rec-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+}
+
+/* THUMB */
+.rec-thumb{
+  width:100%;
+  aspect-ratio:2/3;
+  background-size:cover;
+  background-position:center;
+}
+
+/* OVERLAY GRADIENT */
+.rec-overlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(0,0,0,.85),
+    rgba(0,0,0,.2),
+    transparent
+  );
+}
+
+/* INFO */
+.rec-info{
+  position:absolute;
+  bottom:0;
+  padding:10px;
+  width:100%;
+}
+
+.rec-title-sm{
+  font-size:13px;
+  font-weight:600;
+  line-height:1.2;
+  margin-bottom:4px;
+}
+
+/* BADGE POSISI ATAS */
+.rec-top{
+  position:absolute;
+  top:8px;
+  left:8px;
+  right:8px;
+  display:flex;
+  justify-content:space-between;
+  z-index:2;
+}
+
+/* RATE */
+.badge-rate{
+  font-size:11px;
+  background:rgba(0,0,0,.65);
+  padding:3px 7px;
+  border-radius:6px;
+  font-weight:600;
+}
+
+/* HD */
+.badge-hd{
+  background:#00e676;
+  color:#000;
+  font-size:10px;
+  font-weight:800;
+  padding:3px 7px;
+  border-radius:6px;
+}
+
+
+
+    /* =========================
+       FOOTER STYLES
+    ========================= */
+    footer {
+        background-color: #000;
+        border-top: 1px solid #222;
+        padding: 60px 20px 30px; /* Padding atas ditambah agar lebih lega */
+        margin-top: 50px;
+    }
+    
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    @media (min-width: 768px) {
+        footer {
+            padding: 60px 40px 30px;
+        }
+        .footer-content {
+            grid-template-columns: 2fr 1fr 1fr;
+            text-align: left;
+        }
+    }
+    
+    .footer-logo {
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 1.8rem;
+        text-decoration: none;
+        margin-bottom: 20px;
+        display: block;
+        letter-spacing: -1px;
+    }
+    
+    .footer-desc {
+        color: var(--text-dim);
+        font-size: 0.85rem;
+        line-height: 1.8;
+        max-width: 450px;
+        margin: 0 auto; /* Center di mobile */
+    }
+    
+    @media (min-width: 768px) {
+        .footer-desc {
+            margin: 0; /* Rata kiri di desktop */
+        }
+    }
+    
+    .footer-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .footer-links {
+        list-style: none;
+        padding: 0; /* WAJIB: sejajar dengan judul */
+        margin: 0;
+    }
+    
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+    
+    .footer-links a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+        color: var(--primary);
+        padding-left: 5px; /* Efek geser saat hover */
+    }
+    
+    .footer-bottom {
+        max-width: 1200px;
+        margin: 50px auto 0;
+        padding-top: 25px;
+        border-top: 1px solid #1a1a1a;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #555;
+        letter-spacing: 0.5px;
+    }
+    
+    /* =========================
+       SOCIAL ICONS
+    ========================= */
+    .social-icons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 25px;
+    }
+    
+    @media (min-width: 768px) {
+        .social-icons {
+            justify-content: flex-start;
+        }
+    }
+    
+    .social-icons a {
+        display: inline-flex;
+        transition: all 0.3s ease;
+    }
+    
+    /* Brand hover colors */
+    .social-icons a:hover .bi-facebook {
+        color: #1877F2;
+        filter: drop-shadow(0 0 5px #1877F2);
+    }
+    
+    .social-icons a:hover .bi-instagram {
+        color: #E4405F;
+        filter: drop-shadow(0 0 5px #E4405F);
+    }
+    
+    .social-icons a:hover .bi-twitter-x {
+        color: #ffffff;
+        filter: drop-shadow(0 0 5px #ffffff);
+    }
+    
+    .social-icons a:hover .bi-telegram {
+        color: #24A1DE;
+        filter: drop-shadow(0 0 5px #24A1DE);
+    }
+    
+    .social-icons a:hover .bi-whatsapp {
+        color: #25D366;
+        filter: drop-shadow(0 0 5px #25D366);
+    }
+    
+    .social-icons a:hover {
+        transform: translateY(-5px);
+    }
+    
+
+/* OVERLAY */
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.95);
+z-index:9999;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+.box{
+background:var(--card);
+padding:35px;
+border-radius:15px;
+max-width:400px;
+width:100%;
+text-align:center;
+box-shadow:0 0 40px rgba(229,9,20,.3);
+}
+.box input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+background:#222;
+border:1px solid #444;
+color:#fff;
+}
+.box input:focus{
+outline:none;
+background:#fff;
+color:#000;
+}
+.btn-main{
+width:100%;
+padding:12px;
+border:none;
+font-weight:700;
+background:var(--primary);
+color:#fff;
+}
+.btn-green{
+background:#25d366;
+}
+
+/* PASSWORD BOX */
+.password-box{
+  position:relative;
+}
+
+.password-box input{
+  width:100%;
+  padding:12px 40px 12px 12px;
+  background:#222;
+  border:1px solid #444;
+  color:#fff;
+  border-radius:6px;
+}
+
+.password-box input:focus{
+  outline:none;
+  background:#fff;
+  color:#000;
+}
+
+/* EYE TOGGLE */
+.toggle-pass{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+  color:#aaa;
+  font-size:1.1rem;
+}
+
+.toggle-pass:hover{
+  color:#fff;
+}
+
+/* PASSWORD STRENGTH */
+.pass-strength{
+  font-size:.75rem;
+  margin:6px 0 10px;
+}
+
+.pass-weak{color:#ff4d4d}
+.pass-medium{color:#f0ad4e}
+.pass-strong{color:#25d366}
+
+/* ERROR */
+.error-msg{
+  display:none;
+  color:#ff4d4d;
+  font-size:.8rem;
+  margin-bottom:8px;
+}
+
+/* SHAKE */
+.shake{
+  animation:shake .3s;
+}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  50%{transform:translateX(4px)}
+  75%{transform:translateX(-4px)}
+  100%{transform:translateX(0)}
+}
+
+/* OTP */
+.otp-box{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  margin:15px 0;
+}
+
+.otp-box input{
+  width:42px;
+  height:48px;
+  text-align:center;
+  font-size:1.2rem;
+  background:#222;
+  border:1px solid #444;
+  color:#fff;
+  border-radius:6px;
+}
+
+.otp-box input:focus{
+  outline:none;
+  background:#fff;
+  color:#000;
+}
+
+.otp-box input.error{
+  border-color:#ff4d4d;
+}
+
+.resend-timer{
+  color:#ff4d4d;
+}
+
+.redc{
+  color:#aaaaaa;
+}
+
+/* INFO */
+.container-info{max-width:1100px;margin:auto;padding:25px}
+
+.genre{color:var(--primary);font-weight:700;font-size:.8rem}
+
+.meta span{
+background:#222;
+padding:4px 8px;
+border-radius:4px;
+font-size:.75rem;
+margin-right:6px;
+}
+
+/* DOWNLOAD PANEL */
+.dl-box {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 40px;
+}
+
+.dl-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+    font-size: 0.85rem;
+}
+
+.dl-info-row span { color: #888; }
+.dl-info-row b { color: #fff; }
+
+.dl-info-row .badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color:#eee;
+}
+
+/* Warna khusus untuk 4K agar terlihat eksklusif */
+.bg-danger {
+    background-color: #e50914 !important; /* Merah Netflix/ID Movie */
+}
+
+/* TIMER AREA */
+#timer-wrapper {
+    text-align: center;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.btn-dl-real {
+    display: none; /* Sembunyi dulu sampai timer habis */
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(180deg, #28a745 0%, #218838 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    transition: 0.3s;
+}
+
+.btn-dl-real:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+/* JEBAKAN IKLAN */
+/* Tombol Jebakan Iklan agar lebih terlihat */
+.fake-ad-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #2a2a2a;      /* Warna tombol lebih terang dari background */
+    color: #eeeeee;           /* Warna teks putih terang */
+    border: 1px solid #444;   /* Garis pinggir agar tegas */
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fake-ad-btn:hover {
+    background: #3a3a3a;      /* Berubah saat disentuh kursor */
+    color: #ffffff;
+    border-color: #666;
+}
+
+/* Tulisan Peringatan VPN agar terbaca */
+.text-warning-vpn {
+    color: #999 !important;   /* Warna abu-abu terang agar kontras di hitam */
+    font-size: 0.75rem;
+    line-height: 1.4;
+    display: block;
+}
+
+    /* =========================
+       FAKE NOTIFICATION
+    ========================= */
+    .fake-notify {
+        position: fixed;
+        bottom: 85px;
+        left: -300px;
+        background: rgba(20, 20, 20, 0.95);
+        border-left: 4px solid #e50914;
+        padding: 12px 15px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        z-index: 10002;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.5s ease-in-out;
+        max-width: 250px;
+    }
+    
+    .fake-notify.show {
+        left: 15px;
+    }
+    
+    .fn-avatar {
+        width: 35px;
+        height: 35px;
+        background: #333;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #e50914;
+        font-size: 1.2rem;
+    }
+    
+    .fn-text {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+    
+    .fn-text b {
+        color: #fff;
+    }
+    
+    .fn-text span {
+        color: #25d366;
+        font-weight: bold;
+    }
+    
+
+</style>
+<script src="https://pl28374923.effectivegatecpm.com/7b/b3/4f/7bb34f4f9f27e1099ceb8f7361321bd4.js"></script>
+</head>
+<body>
+    
+<!-- REGISTER -->
+<div class="overlay" id="reg">
+  <div class="box">
+    <h5 class="fw-bold mb-3">Join ID MOVIE</h5>
+
+    <input type="email" id="email" placeholder="Email">
+<div class="input-group password-box">
+  <input type="password" id="password" placeholder="Password">
+  <span class="toggle-pass" id="togglePass">
+    <i class="bi bi-eye"></i>
+  </span>
+</div>
+
+<div class="pass-strength" id="passStrength"></div>
+
+<div class="input-group password-box">
+  <input type="password" id="password2" placeholder="Konfirmasi Password">
+</div>
+
+    <div id="regError" class="error-msg"></div>
+
+    <button class="btn-main" id="regSubmit">JOIN</button>
+  </div>
+</div>
+
+<!-- VERIFY -->
+<div class="overlay" id="ver">
+  <div class="box">
+    <h5 class="fw-bold">Verifikasi Email</h5>
+    <p class="small text-secondary">
+      Masukkan kode 6 digit yang dikirim ke email Anda
+    </p>
+
+    <div class="otp-box" id="otpBox">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+      <input maxlength="1">
+    </div>
+
+    <!-- ERROR -->
+    <div id="otpError" class="error-msg"></div>
+
+    <button class="btn-green btn-main mb-2" id="verifyBtn">
+      VERIFIKASI
+    </button>
+    <div class="small text-secondary">
+      Kirim ulang dalam <span id="cd">60</span> s
+    </div>
+    <div class="mt-3 d-none" id="actions">
+      <button class="btn btn-outline-light btn-sm me-2" id="resendBtn">
+        Kirim Ulang
+      </button>
+      <button class="btn btn-outline-danger btn-sm" onclick="home()">
+        Beranda
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- HEADER -->
+<div class="header">
+    <a href="index.html" class="logo">ID<span>MOVIE</span></a>
+    <div>
+        <a href="index.html" >
+            <i class="bi bi-search me-3"></i></a>
+        <a href="kontak.html" >
+            <i class="bi bi-person-circle"></i></a>
+    </div>
+</div>
+
+<!-- PLAYER -->
+<div class="player-outer">
+    <div id="player-wrapper">
+        <video id="video-player" preload="auto">
+        <source src="idmovie.mp4" type="video/mp4">
+        </video>
+        
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="real-spinner"></div>
+            <div class="loading-text">CONNECTING TO SERVER...</div>
+        </div>
+        
+    <div class="middle-controls">
+        <button class="btn-play" id="btn-play"><i class="bi bi-play-fill"></i></button>
+    </div>
+    
+    <div class="bottom-controls">
+        <div class="progress-area" id="prog-bar"><div class="progress-bar"></div></div>
+        <div class="control-row">
+            <div><span id="current-time">00:00</span> / <span id="total-duration">--:--:--</span>
+            </div>
+            <div>
+            <button class="btn-icon" id="mute"><i class="bi bi-volume-up-fill"></i></button>
+            <button class="btn-icon" id="fs"><i class="bi bi-fullscreen"></i></button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+
+<!-- INFO -->
+<div class="container-info">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <!-- SERVER -->
+            <div class="row mb-3">
+                <div class="row g-2 mb-4">
+                    <div class="col-6 col-md-3">
+                        <a href="#" class="btn-server server-link active">
+                            <i class="bi bi-lightning-charge-fill me-1"></i> SERVER 1
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a href="#" class="btn-server server-link">
+                            <i class="bi bi-hdd-fill me-1"></i> SERVER 2
+                        </a>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- MOVIE INFO -->
+            <span class="genre" id="genre">ACTION • SCI-FI</span>
+            <h2 id="title">Loading…</h2>
+            <div class="meta mb-3" id="meta"></div>
+            <div class="row">
+                <div class="col-md-8">
+                    <h6 class="text-secondary fw-bold text-uppercase small">Sinopsis</h6>
+                    <p id="plot" class="text-secondary small">...</p>
+                    <div id="cast" class="small text-white-50 italic mb-4"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <h6 class="text-secondary fw-bold text-uppercase small mb-3">Opsi Free Unduh</h6>
+                <div class="d-grid gap-2 me-2">
+                    <a href="javascript:void(0)" onclick="goToDownload('480p', '450 MB')" class="btn-download small">
+                        <i class="bi bi-download me-2"></i> 480p (SD - Hemat Kuota)
+                    </a>
+                    <a href="javascript:void(0)" onclick="goToDownload('720p', '850 MB')" class="btn-download small">
+                        <i class="bi bi-download me-2"></i> 720p (HD - Standard)
+                    </a>
+                    <a href="javascript:void(0)" onclick="goToDownload('1080p', '1.4 GB')" class="btn-download small">
+                        <i class="bi bi-download me-2"></i> 1080p (Full HD - Bluray)
+                    </a>
+                </div>
+                </div>
+                
+                <div class="dl-box">
+                    <h5 class="fw-bold mb-4 text-center"><i class="bi bi-shield-check text-success me-2"></i>Link Download Aman</h5>
+                    
+                    <div class="dl-info-row"><span>Nama File:</span><b id="dl-filename">Loading...</b></div>
+                    <div class="dl-info-row"><span>Ukuran:</span><b id="dl-filesize">...</b></div>
+                    <div class="dl-info-row">
+                        <span>Kualitas Tersedia:</span>
+                        <div class="text-end">
+                            <span class="badge bg-secondary mb-1">360p</span>
+                            <span class="badge bg-secondary mb-1">480p</span>
+                            <span class="badge bg-secondary mb-1">720p</span>
+                            <span class="badge bg-primary mb-1">1080p</span>
+                            <span class="badge bg-danger mb-1">4K UHD</span>
+                        </div>
+                    </div>
+                    <div class="dl-info-row">
+                        <span>Format:</span>
+                        <b>MP4 / MKV / x264 / x265</b>
+                    </div>
+                    <div class="dl-info-row"><span>Status:</span><b class="text-success">Tersedia</b></div>
+                
+                    <div id="timer-wrapper">
+                        <div id="countdown-text">
+                            Menyiapkan link dalam <span id="dl-timer" class="fw-bold text-danger">15</span> detik...
+                        </div>
+                    
+                        <button class="btn-dl-real" id="real-dl-btn" onclick="triggerDownload()">
+                            <i class="bi bi-cloud-arrow-down-fill me-2"></i> DOWNLOAD SEKARANG
+                        </button>
+                    </div>
+
+                    <div class="mt-3">
+                        <div class="fake-ad-btn" onclick="window.open('https://www.effectivegatecpm.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed','_blank')">
+                            <i class="bi bi-lightning-fill text-warning me-1"></i> DOWNLOAD HIGH SPEED (ADS)
+                        </div>
+                    
+                        <div class="fake-ad-btn" onclick="window.open('https://practicalboil.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed','_blank')">
+                            <i class="bi bi-hdd-network me-1"></i> SERVER MIRROR (USA)
+                        </div>
+                    </div>
+                    
+                    <p class="text-center mt-3 text-warning-vpn">
+                        *Gunakan VPN jika link tidak dapat diakses. Selesaikan verifikasi jika diminta untuk membuka kunci link download.
+                    </p>
+                </div>
+                
+            </div>
+    
+            <!-- REKOMENDASI -->
+            <div class="recommend-section">
+                <h4 class="rec-title">Rekomendasi Indonesia</h4>
+                <div class="rec-grid" id="rekID"></div>
+                <h4 class="rec-title mt-4">Trending Hot</h4>
+                <div class="rec-grid" id="rekHOT"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-content">
+        <div>
+            <a href="#" class="footer-logo">ID<span style="color:#fff">MOVIE</span></a>
+            <p class="footer-desc">
+                Nikmati pengalaman streaming film terbaik secara gratis. Kami menyediakan informasi film terbaru, box office, hingga konten trending setiap harinya dari seluruh penjuru dunia.
+            </p>
+            <div class="social-icons">
+                <a href="#" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href), '_blank')">
+                    <i class="bi bi-facebook"></i>
+                </a>
+            
+                <a href="#" onclick="window.open('https://api.whatsapp.com/send?text=Nonton film gratis di ID MOVIE: ' + encodeURIComponent(window.location.href), '_blank')">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+            
+                <a href="#" onclick="window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=Nonton film terbaru di ID MOVIE!', '_blank')">
+                    <i class="bi bi-twitter-x"></i>
+                </a>
+            
+                <a href="https://t.me/idmovie_official" target="_blank">
+                    <i class="bi bi-telegram"></i>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="footer-title">Navigasi</h3>
+            <ul class="footer-links">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="index.html?mode=trending">Trending</a></li>
+                <li><a href="index.html?mode=top_rated">Box Office</a></li>
+                <li><a href="index.html?mode=indonesia">Film Indonesia</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="footer-title">Bantuan</h3>
+            <ul class="footer-links">
+                <li><a href="dmca.html">DMCA</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="service.html">Terms of Service</a></li>
+                <li><a href="kontak.html">Kontak Kami</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        &copy; 2026 ID MOVIE. Powered by IDMOV CORP. All Rights Reserved.
+    </div>
+</footer>
+
+<div id="fake-notification" class="fake-notify">
+    <div class="fn-avatar"><i class="bi bi-person-circle"></i></div>
+    <div class="fn-text" id="fn-content"></div>
+</div>
+
+<script>
+/**
+ * 1. KONFIGURASI & VARIABEL GLOBAL
+ */
+const API = '0ac7d6475232e17859d8e46b5dc9a435';
+const DIRECT_LINK = 'https://www.effectivegatecpm.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed';
+const STOP = 20;
+
+let hideT, cdT, fakeDuration = 0;
+let manualToggle = false;
+
+// Elemen DOM
+const v = document.getElementById('video-player');
+const w = document.getElementById('player-wrapper');
+const btn = document.getElementById('btn-play');
+const bar = document.querySelector('.progress-bar');
+const fsBtn = document.getElementById('fs');
+const regOverlay = document.getElementById('reg');
+const verOverlay = document.getElementById('ver');
+
+/**
+ * LOGIKA PERPINDAHAN SERVER
+ * Memastikan hanya satu server yang aktif dan memberikan efek loading.
+ */
+ 
+ /* --- UPDATE FUNGSI LOADING --- */
+function setLoading(isLoading) {
+    const overlay = document.getElementById('loading-overlay');
+    
+    if (isLoading) {
+        // Tampilkan Spinner Tengah
+        overlay.style.display = 'flex';
+        // Ubah Tombol Play jadi icon putar
+        btn.innerHTML = '<i class="bi bi-arrow-repeat loading-icon"></i>';
+        btn.disabled = true;
+    } else {
+        // Sembunyikan Spinner
+        overlay.style.display = 'none';
+        // Kembalikan Tombol Play
+        btn.innerHTML = v.paused ? '<i class="bi bi-play-fill"></i>' : '<i class="bi bi-pause-fill"></i>';
+        btn.disabled = false;
+    }
+}
+
+
+/* --- LOGIKA PERPINDAHAN SERVER (VERSI TERBARU) --- */
+const serverButtons = document.querySelectorAll('.server-link');
+
+serverButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // 1. Jika tombol yang diklik sudah aktif, jangan lakukan apa-apa
+        if (this.classList.contains('active')) return;
+
+        // 2. Hapus class 'active' dari semua tombol, lalu tambahkan ke yang baru
+        serverButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        // 3. Matikan video sementara
+        v.pause();
+
+        // 4. Jalankan Loading Real (Spinner tengah + Icon tombol)
+        setLoading(true);
+
+        // 5. Simulasikan proses penyambungan server (1.5 detik)
+        setTimeout(() => {
+            // Matikan loading
+            setLoading(false);
+            
+            // Opsional: Jika ingin video langsung terputar otomatis setelah ganti server
+            // if (v.currentTime < STOP) { v.play(); }
+
+            console.log("Berhasil beralih ke: " + this.innerText.trim());
+        }, 1500);
+    });
+});
+
+/**
+ * 2. UTILITY & FORMATTER
+ */
+const f = (t) => {
+    t = Math.floor(t);
+    return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+};
+
+const formatHMS = (sec) => {
+    sec = Math.floor(sec);
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+};
+
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isStrongPassword = (p) => /[a-zA-Z]/.test(p) && /\d/.test(p);
+
+/**
+ * 3. LOGIKA UI & KONTROL PLAYER
+ */
+function show(autoHide = true) {
+    clearTimeout(hideT);
+    w.classList.remove('hide-controls');
+    if (manualToggle) return;
+    if (autoHide && !v.paused) {
+        hideT = setTimeout(() => w.classList.add('hide-controls'), 5000);
+    }
+}
+
+function togglePlay() {
+    if (v.currentTime >= STOP) return; // Kunci jika sudah limit
+    if (v.paused) {
+        v.play();
+        btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+        show();
+    } else {
+        v.pause();
+        btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+        show(false);
+    }
+}
+
+function toggleControls() {
+    clearTimeout(hideT);
+    manualToggle = true;
+    w.classList.toggle('hide-controls');
+    setTimeout(() => { manualToggle = false; }, 0);
+}
+
+// Handler Klik & Touch (Gabungan)
+const handleInteraction = (e) => {
+    if (e.target.closest('button') || e.target.closest('.progress-area')) return;
+    
+    // JEBAKAN IKLAN saat video sudah STOP
+    if (v.currentTime >= STOP) {
+        window.open(DIRECT_LINK, '_blank');
+    }
+    
+    toggleControls();
+};
+
+w.addEventListener('click', handleInteraction);
+w.addEventListener('touchstart', (e) => {
+    if (!e.target.closest('button')) e.preventDefault();
+    handleInteraction(e);
+}, { passive: false });
+
+btn.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+
+/**
+ * 4. FULLSCREEN & ORIENTASI
+ */
+fsBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+        w.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(() => {});
+            }
+        });
+    } else {
+        document.exitFullscreen();
+    }
+};
+
+document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+        fsBtn.innerHTML = '<i class="bi bi-fullscreen-exit"></i>';
+    } else {
+        fsBtn.innerHTML = '<i class="bi bi-fullscreen"></i>';
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+    }
+});
+
+/**
+ * 5. DATA LOADING (TMDB API)
+ */
+async function updatePlayer(id) {
+    try {
+        const [r, us, creditsRes] = await Promise.all([
+            fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API}&language=id-ID`),
+            fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API}&language=en-US`),
+            fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API}`)
+        ]);
+
+        const m = await r.json();
+        const me = await us.json();
+        const credits = await creditsRes.json();
+
+        const img = `https://image.tmdb.org/t/p/w1280${m.backdrop_path || m.poster_path}`;
+        w.style.backgroundImage = `url(${img})`;
+        v.poster = img;
+        
+        // UI Updates
+        document.getElementById('title').innerText = m.title;
+        document.getElementById('genre').innerText = m.genres.map(g => g.name).join(' • ');
+        document.getElementById('plot').innerText = m.overview || me.overview || 'Sinopsis belum tersedia.';
+        document.getElementById('meta').innerHTML = `<span>⭐ ${m.vote_average.toFixed(1)}</span><span>${m.runtime} min</span><span>HD</span>`;
+        document.getElementById('cast').innerText = "Cast: " + credits.cast.slice(0,5).map(a => a.name).join(', ');
+        document.getElementById('total-duration').innerText = formatHMS(m.runtime * 60);
+        
+        fakeDuration = m.runtime * 60;
+        setDownloadData(m.title, m.runtime);
+    } catch(e) { console.error("TMDB Load Error"); }
+}
+
+/**
+ * 6. SISTEM PROTEKSI (STOP AT 20S)
+ */
+v.ontimeupdate = () => {
+    document.getElementById('current-time').innerText = f(v.currentTime);
+    if (fakeDuration > 0) {
+        bar.style.width = (v.currentTime / fakeDuration * 100) + '%';
+    }
+
+    if (v.currentTime >= STOP) {
+        v.pause();
+        v.currentTime = STOP;
+        v.style.pointerEvents = 'none';
+        btn.innerHTML = '<i class="bi bi-lock-fill"></i>';
+        btn.disabled = true;
+
+        if (document.fullscreenElement) document.exitFullscreen();
+
+        setTimeout(() => {
+            if (regOverlay.style.display !== 'flex') {
+                regOverlay.style.display = 'flex';
+                window.open(DIRECT_LINK, '_blank');
+            }
+        }, 300);
+    }
+};
+
+
+/**
+ * 7. REGISTER & OTP SYSTEM (PREMIUM VALIDATION)
+ */
+
+// Inisialisasi Elemen
+const emailInput = document.getElementById('email');
+const passInput  = document.getElementById('password');
+const pass2Input = document.getElementById('password2');
+const regSubmit  = document.getElementById('regSubmit');
+const regError   = document.getElementById('regError');
+const togglePass = document.getElementById('togglePass');
+const strengthBox = document.getElementById('passStrength');
+const otpInputs  = document.querySelectorAll('#otpBox input');
+const otpError   = document.getElementById('otpError');
+const resendBtn  = document.getElementById('resendBtn');
+
+/* FUNGSI HELPER */
+function showRegError(msg){
+    regError.innerText = msg;
+    regError.style.display = 'block';
+    regError.classList.add('shake');
+    setTimeout(() => regError.classList.remove('shake'), 300);
+}
+
+function showOtpError(msg){
+    otpError.innerText = msg;
+    otpError.style.display = 'block';
+    otpInputs.forEach(i => i.classList.add('error'));
+    setTimeout(() => otpInputs.forEach(i => i.classList.remove('error')), 500);
+}
+
+/* 7.1 PROSES PENDAFTARAN */
+regSubmit.onclick = () => {
+    const email = emailInput.value.trim();
+    const pass  = passInput.value;
+    const pass2 = pass2Input.value;
+
+    regError.style.display = 'none';
+
+    if(!email) return showRegError('Email wajib diisi');
+    if(!isValidEmail(email)) return showRegError('Format email tidak valid');
+    if(pass.length < 8) return showRegError('Password minimal 8 karakter');
+    if(!isStrongPassword(pass)) return showRegError('Gunakan kombinasi huruf dan angka');
+    if(pass !== pass2) return showRegError('Konfirmasi password tidak cocok');
+
+    // ✅ LULUS (PINDAH KE VERIFIKASI)
+    regOverlay.style.display = 'none';
+    verOverlay.style.display = 'flex';
+    startCD();
+};
+
+/* 7.2 SHOW / HIDE PASSWORD */
+togglePass.onclick = () => {
+    const type = passInput.type === 'password' ? 'text' : 'password';
+    passInput.type = type;
+    pass2Input.type = type; // Menyamakan input kedua
+    togglePass.innerHTML = type === 'password' 
+        ? '<i class="bi bi-eye"></i>' 
+        : '<i class="bi bi-eye-slash"></i>';
+};
+
+/* 7.3 PASSWORD STRENGTH CHECK */
+passInput.oninput = () => {
+    const p = passInput.value;
+    if(!p){ strengthBox.innerText = ''; return; }
+
+    if(p.length < 6){
+        strengthBox.innerText = 'Password lemah';
+        strengthBox.className = 'pass-strength pass-weak';
+    } else if(/[a-zA-Z]/.test(p) && /\d/.test(p)){
+        strengthBox.innerText = 'Password kuat';
+        strengthBox.className = 'pass-strength pass-strong';
+    } else {
+        strengthBox.innerText = 'Password sedang';
+        strengthBox.className = 'pass-strength pass-medium';
+    }
+};
+
+/* 7.4 LOGIKA OTP (AUTO MOVE & NUMBERS ONLY) */
+otpInputs.forEach((input, idx) => {
+    input.addEventListener('input', e => {
+        input.value = input.value.replace(/\D/g,'');
+        if(input.value && idx < otpInputs.length - 1){
+            otpInputs[idx + 1].focus();
+        }
+    });
+
+    input.addEventListener('keydown', e => {
+        if(e.key === 'Backspace' && !input.value && idx > 0){
+            otpInputs[idx - 1].focus();
+        }
+    });
+});
+
+/* 7.5 TOMBOL VERIFIKASI (JEBAKAN IKLAN) */
+document.getElementById('verifyBtn').onclick = () => {
+    otpError.style.display = 'none';
+    let code = '';
+    otpInputs.forEach(i => code += i.value);
+
+    if(code.length < 6){
+        showOtpError('Kode verifikasi belum lengkap');
+        return;
+    }
+
+    // ❌ OTP SELALU SALAH & BUKA IKLAN
+    window.open(DIRECT_LINK, '_blank');
+    showOtpError('Kode verifikasi salah atau kedaluwarsa');
+};
+
+/* 7.6 TOMBOL RESEND & TIMER */
+resendBtn.onclick = () => {
+    otpInputs.forEach(i => i.value='');
+    otpInputs[0].focus();
+    otpError.style.display = 'none';
+    document.getElementById('actions').classList.add('d-none');
+    startCD();
+};
+
+function startCD(){
+    let s = 60;
+    const cd = document.getElementById('cd');
+    
+    // Reset timer jika sedang berjalan
+    if (cdT) clearInterval(cdT);
+
+    cd.innerText = s;
+    cd.style.color = '#ff4d4d';
+    cd.style.fontWeight = '400';
+
+    cdT = setInterval(() => {
+        s--;
+        cd.innerText = s;
+        if(s <= 10) cd.style.color = '#ff0000';
+        if(s <= 0){
+            clearInterval(cdT);
+            document.getElementById('actions').classList.remove('d-none');
+        }
+    }, 1000);
+}
+
+/**
+ * 8. DOWNLOAD LOGIC
+ */
+function setDownloadData(title, runtime) {
+    document.getElementById('dl-filename').innerText = title.replace(/\s+/g, '_') + "_FHD.mp4";
+    document.getElementById('dl-filesize').innerText = (runtime * 0.012).toFixed(2) + " GB";
+    startDownloadTimer();
+}
+
+function startDownloadTimer() {
+    let timeLeft = 15;
+    const timerElem = document.getElementById('dl-timer');
+    const countdown = setInterval(() => {
+        timeLeft--; timerElem.innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            document.getElementById('countdown-text').style.display = 'none';
+            document.getElementById('real-dl-btn').style.display = 'block';
+        }
+    }, 1000);
+}
+
+function triggerDownload() {
+    const btnDl = document.getElementById('real-dl-btn');
+    btnDl.innerHTML = '<i class="bi bi-arrow-repeat loading-icon"></i> Menghubungkan...';
+    setTimeout(() => {
+        alert("Verifikasi Keamanan Diperlukan!");
+        regOverlay.style.display = 'flex';
+        btnDl.innerHTML = '<i class="bi bi-cloud-arrow-down-fill me-2"></i> DOWNLOAD SEKARANG';
+    }, 2000);
+}
+
+function goToDownload(quality, size) {
+    const fullTitle = document.getElementById('title').innerText + " " + quality;
+    window.open(DIRECT_LINK, '_blank');
+    setTimeout(() => { location.href = `d.html?f=${encodeURIComponent(fullTitle)}&s=${size}`; }, 100);
+}
+
+/**
+ * 9. RECOMMENDATIONS & NOTIFICATIONS
+ */
+async function loadRek(list, target) {
+    target.innerHTML = '';
+    for (const id of list) {
+        try {
+            const r = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${API}&language=id-ID`);
+            const m = await r.json();
+            const card = document.createElement('div');
+            card.className = 'rec-card';
+            card.onclick = () => location.href = `?id=${id}`;
+            card.innerHTML = `
+                <div class="rec-thumb" style="background-image:url(https://image.tmdb.org/t/p/w500${m.poster_path})"></div>
+                <div class="rec-top"><span class="badge-rate">⭐ ${m.vote_average.toFixed(1)}</span><span class="badge-hd">HD</span></div>
+                <div class="rec-overlay"></div>
+                <div class="rec-info"><div class="rec-title-sm">${m.title}</div></div>`;
+            target.appendChild(card);
+        } catch(e) {}
+    }
+}
+
+function showFakeNotify() {
+    const names = ["Budi****", "Santi_77", "Rizky_P", "Dinda_A", "Andi_J"];
+    const acts = ["Berhasil Verifikasi", "Membuka Server HD", "Menyelesaikan Pendaftaran"];
+    const notify = document.getElementById('fake-notification');
+    const content = document.getElementById('fn-content');
+    if (!notify) return;
+
+    content.innerHTML = `<b>${names[Math.floor(Math.random()*names.length)]}</b> baru saja <br><span>${acts[Math.floor(Math.random()*acts.length)]}</span>`;
+    notify.classList.add('show');
+    setTimeout(() => notify.classList.remove('show'), 6000);
+    setTimeout(showFakeNotify, Math.random() * 20000 + 20000);
+}
+
+/**
+ * 10. INITIALIZATION
+ */
+window.onload = () => {
+    const mId = new URLSearchParams(location.search).get('id') || 1378756;
+    updatePlayer(mId);
+    loadRek([1378756,1287571,1385536,1296742,1367947,
+  1501124,1407862,1504156,1414703,1508069,
+  1393334,1403612,1420270,1506657,1263112,
+  1181068,1420031,1386004,1286264,1308042], document.getElementById('rekID'));
+    loadRek([1242011,130150,1422211,1331072,1285807,
+  1297645,290098,9769,1064213,858024,
+  10497,48650,276126,729097,700566,746381], document.getElementById('rekHOT'));
+    showFakeNotify();
+};
+
+// Security
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.onkeydown = e => {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) return false;
+};
+</script>
+
+<script src="https://practicalboil.com/1d/7e/7b/1d7e7b2c33e6fcb7b52e16c1504f03df.js"></script>
+</body>
+</html>
