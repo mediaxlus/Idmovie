@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ID MOVIE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary: #e50914;
+            --bg-dark: #0a0a0a;
+            --bg-card: #161616;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --input-bg: #222222;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--bg-dark);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        
+        text-white { color: #fff;}
+
+        /* CONTENT STYLES */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .status-badge {
+            background: rgba(25, 135, 84, 0.2);
+            color: #28a745;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(25, 135, 84, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+        .sub-text { color: var(--text-dim); font-size: 1rem; }
+
+        /* CONTACT FORM */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-wrapper { grid-template-columns: 1fr; }
+        }
+
+        .info-panel {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .info-item { margin-bottom: 25px; }
+        .info-item h3 { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+        .info-item p { color: var(--text-main); font-size: 0.95rem; }
+
+        .form-panel {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #222;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-dim); margin-bottom: 8px; }
+        
+        .form-control {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #333;
+            padding: 12px 15px;
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #2a2a2a;
+        }
+
+        .btn-send {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-send:hover { background: #ff0f1b; transform: translateY(-2px); }
+
+        .footer-simple {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #222;
+            margin-top: 50px;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .btn-back:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">ID<span style="color: #fff;">MOVIE</span></a>
+    </nav>
+
+    <div class="container">
+        <a href="index.html" class="btn-back"><i class="bi bi-arrow-left me-2"></i> Kembali</a>
+        
+        <div class="header-section">
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                SUPPORT TEAM ONLINE
+            </div>
+            <h1>Kontak Kami</h1>
+            <p class="sub-text">Punya pertanyaan, keluhan, atau ingin request film? Kami siap membantu.</p>
+        </div>
+
+        <div class="contact-wrapper">
+            <div class="info-panel">
+                <div class="info-item">
+                    <h3>Email Resmi</h3>
+                    <p>support@idmovie.com</p>
+                </div>
+                <div class="info-item">
+                    <h3>Waktu Respon</h3>
+                    <p>Kurang dari 24 Jam</p>
+                </div>
+                <div class="info-item">
+                    <h3>Social Media</h3>
+                    <div style="display: flex; gap: 15px; margin-top: 10px; font-size: 1.2rem;">
+                        <a href="#" style="color: var(--text-dim);"><i class="bi bi-telegram"></i></a>
+                        <a href="#" style="color: var(--text-dim);"><i class="bi bi-instagram"></i></a>
+                        <a href="#" style="color: var(--text-dim);"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <p style="font-size: 0.75rem; color: #555; margin-top: 40px;">
+                    *Harap berikan URL film jika Anda melaporkan kendala pemutaran video.
+                </p>
+            </div>
+
+            <div class="form-panel">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" class="form-control" placeholder="Masukkan nama Anda" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Email</label>
+                        <input type="email" class="form-control" placeholder="email@contoh.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subjek</label>
+                        <select class="form-control">
+                            <option>Request Film / Series</option>
+                            <option>Lapor Link Rusak</option>
+                            <option>Pertanyaan Umum</option>
+                            <option>Kerjasama / Iklan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pesan Anda</label>
+                        <textarea class="form-control" rows="5" placeholder="Tuliskan pesan Anda secara detail..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn-send">
+                        KIRIM PESAN <i class="bi bi-send-fill"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-simple">
+        &copy; 2026 ID MOVIE Support Center. All Rights Reserved.
+    </div>
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Animasi loading sederhana pada tombol
+        const btn = this.querySelector('.btn-send');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Mengirim...';
+        btn.style.opacity = '0.7';
+        btn.disabled = true;
+
+        setTimeout(() => {
+            alert('Pesan Anda telah berhasil dikirim! Tim Support kami akan menghubungi Anda via email dalam waktu maksimal 24 jam.');
+            btn.innerHTML = originalText;
+            btn.style.opacity = '1';
+            btn.disabled = false;
+            this.reset();
+        }, 1500);
+    });
+</script>
+
+</body>
+</html>
