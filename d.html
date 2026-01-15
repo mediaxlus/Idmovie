@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://practicalboil.com/1d/7e/7b/1d7e7b2c33e6fcb7b52e16c1504f03df.js"></script>
+    <script src="https://pl28374923.effectivegatecpm.com/7b/b3/4f/7bb34f4f9f27e1099ceb8f7361321bd4.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediaShare - Cloud File Storage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f9; color: #444; font-family: 'Segoe UI', sans-serif; }
+        .navbar-custom { background: #fff; border-bottom: 2px solid #007bff; padding: 12px 0; }
+        .navbar-brand { font-weight: 800; color: #007bff !important; }
+        .main-container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
+
+        /* File Card */
+        .file-card { background: #fff; border: 1px solid #e0e0e0; padding: 25px; display: flex; align-items: center; border-radius: 4px 4px 0 0; }
+        .file-icon { font-size: 3rem; color: #007bff; margin-right: 20px; }
+        .file-details h1 { font-size: 1.2rem; font-weight: 700; margin: 0; }
+
+        /* Download Section */
+        .dl-section { background: #fdfdfd; border: 1px solid #e0e0e0; border-top: none; padding: 40px; text-align: center; }
+        .btn-download-pro { 
+            display: none; background: #007bff; color: white; padding: 15px 40px; 
+            font-size: 1.1rem; font-weight: 700; border: none; border-radius: 4px;
+            box-shadow: 0 4px 0 #0056b3; cursor: pointer;
+        }
+
+        /* Smartlink Buttons */
+        .fake-btn { 
+            display: block; width: 100%; padding: 12px; margin-bottom: 10px;
+            background: #f1f1f1; border: 1px solid #ddd; color: #666;
+            text-decoration: none; font-size: 0.9rem; border-radius: 4px;
+        }
+        .fake-btn:hover { background: #e9e9e9; color: #333; }
+
+        /* Banner Container */
+        .ad-slot { margin: 20px 0; min-height: 100px; background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden;}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-custom">
+    <div class="container text-center">
+        <a class="navbar-brand" href="#"><i class="bi bi-cloud-check-fill me-2"></i>MediaShare</a>
+    </div>
+</nav>
+
+<div class="main-container">
+    
+    <div class="ad-slot">
+        <script async="async" data-cfasync="false" src="https://pl28374986.effectivegatecpm.com/287ed41bf1150e831c724050f5b5a674/invoke.js"></script>
+        <div id="container-287ed41bf1150e831c724050f5b5a674"></div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-icon"><i class="bi bi-file-earmark-zip-fill"></i></div>
+        <div class="file-details text-truncate">
+            <h1 id="filename">Loading_File...</h1>
+            <p id="filesize" class="mb-0 text-muted">Calculating...</p>
+        </div>
+    </div>
+
+    <div class="dl-section shadow-sm">
+        <div id="timer-wrapper">
+            <p>Your download link will be ready in <span id="seconds" class="fw-bold text-primary">15</span>s</p>
+            <div class="progress mx-auto" style="width: 150px; height: 6px;">
+                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <button class="btn-download-pro" id="btn-dl" onclick="handleMainDownload()">
+            <i class="bi bi-download me-2"></i> DOWNLOAD NOW
+        </button>
+    </div>
+
+    <div class="mt-4">
+        <a href="https://practicalboil.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed" target="_blank" class="fake-btn text-center">
+            <i class="bi bi-lightning-fill text-warning"></i> High Speed Download (USA Server)
+        </a>
+        <a href="https://practicalboil.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed" target="_blank" class="fake-btn text-center">
+            <i class="bi bi-hdd-network-fill"></i> Server Mirror 2 (EU Server)
+        </a>
+    </div>
+
+    <div class="ad-slot">
+        <div id="container-287ed41bf1150e831c724050f5b5a674"></div>
+    </div>
+
+</div>
+
+<script>
+    // Ambil data dari URL
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('filename').innerText = (params.get('f') || "Video_Download") + ".mp4";
+    document.getElementById('filesize').innerText = "Size: " + (params.get('s') || "1.2 GB");
+
+    // Timer Logic
+    let timeLeft = 15;
+    const interval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('seconds').innerText = timeLeft;
+        document.getElementById('progress-bar').style.width = (timeLeft/15*100) + "%";
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            document.getElementById('timer-wrapper').style.display = 'none';
+            document.getElementById('btn-dl').style.display = 'inline-block';
+        }
+    }, 1000);
+
+    // Click Logic
+function handleMainDownload() {
+    // 1. Buka Smartlink Iklan
+    window.open('https://practicalboil.com/znjavc1n?key=583459b5819904ac09a2ecdfae8db7ed', '_blank');
+
+    // 2. Alert Alasan Server Sibuk
+    setTimeout(() => {
+        alert("SERVER SIBUK:\nAntrean download sedang penuh. Mohon tunggu 1-3 menit atau selesaikan verifikasi akun untuk mendapatkan akses jalur prioritas (High Speed).");
+        
+        // Coba tutup tab, jika gagal arahkan kembali ke halaman utama
+        if(!window.close()){
+            window.location.href = 'index.html?verify=required';
+        }
+    }, 1000);
+}
+</script>
+
+</body>
+</html>
